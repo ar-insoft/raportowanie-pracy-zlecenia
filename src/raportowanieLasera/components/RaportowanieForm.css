@@ -1,0 +1,41 @@
+
+.scan {
+    width: 400px;
+}
+#root > div > div.ui.center.aligned.container > form > div > div.ui.compact.segment > div > div.ui.items {
+    flex: 0 0 500px;
+}
+
+#root > div > div.ui.center.aligned.container > form > div > div.ui.compact.segment > div {
+    width: 350px;
+}
+
+.niepoprawne_dane {
+    background-color: #FFCCCC;
+}
+
+.odczytano_dane {
+    background-color:rgb(191, 229, 191);
+}
+
+.server_info {
+    width: 400px;
+    /* min-height: 100px; */
+    padding: 10px;
+    overflow: hidden;
+    flex: 0 0 500px;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.odswiezStroneZa {
+    margin-top: 0.3em;
+    display: inline-block;
+    min-height: 1.1em;
+}
+
+.keepLine {
+    margin-top: 0.3em;
+    display: inline-block;
+}

@@ -1,0 +1,33 @@
+{
+  "name": "raportowanie_pracy_zlecenia",
+  "homepage": "http://proedims:8080/eoffice/react/raportowanie_pracy_zlecenia",
+  "proxy": "http://proedims:8080",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-scripts": "3.1.1",
+    "react-toastify": "^5.3.2",
+    "rxjs": "^6.5.2",
+    "semantic-ui-css": "2.4.1",
+    "semantic-ui-react": "^0.88.0",
+    "react-intl": "^2.9.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

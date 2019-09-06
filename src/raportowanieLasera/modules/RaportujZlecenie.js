@@ -1,12 +1,12 @@
 class RaportujZlecenie {
     constructor() {
         this.scanInput = ''
-        this.employeeId = -1
+        //this.employeeId = -1
         this.employee = {}
         this.orderProductionSystemObject = {}
         this.productOrComponentSystemObject = {}
-        this.operacja = {}
-        this.pracePracownika = []
+        this.productionOperationSchedule = {}
+        this.praceRozpoczetePrzezPracownika = []
     }
 
     setter = (changes) => {
@@ -36,13 +36,33 @@ class RaportujZlecenie {
         : ''
     }
 
+    isElementOdczytany = () => {
+        return this.productOrComponentSystemObject.id_system_object
+    }
+
+    elementOpis = () => {
+        return this.productOrComponentSystemObject.id_system_object 
+        ? this.productOrComponentSystemObject.object_index + ' / ' + this.productOrComponentSystemObject.title 
+        : ''
+    }
+
+    isOperacjaOdczytana = () => {
+        return this.productionOperationSchedule.id
+    }
+
+    operacjaOpis = () => {
+        return this.isOperacjaOdczytana() 
+        ? this.productionOperationSchedule.object_index + ' / ' + this.productionOperationSchedule.title 
+        : ''
+    }
+
     wyslijNaSerwer = (additionalFields, promiseHandler, errorHandler) => {
         const doWyslania = Object.assign({ ...this }, { ...additionalFields })
         doWyslania.idEmployee = this.employee.id
         delete doWyslania.employee
 
         delete doWyslania.obiektyTestowe
-        delete doWyslania.pracePracownika
+        delete doWyslania.praceRozpoczetePrzezPracownika
         delete doWyslania.serverInfo
 
         doWyslania.idZlecenie = this.orderProductionSystemObject.id_system_object
@@ -74,8 +94,7 @@ class RaportujZlecenie {
                 }
                 const fromServer = json
                 console.log('RaportujZlecenie.wyslijNaSerwer fromServer', fromServer)
-                fromServer.idEmployee = fromServer.employee ? fromServer.employee.id : ''
-                fromServer.idProgramu = fromServer.kartaProgramu ? fromServer.kartaProgramu.idProgramu : ''
+                //fromServer.idEmployee = fromServer.employee ? fromServer.employee.id : ''
                 this.pracePracownika = fromServer.pracePracownika
 
                 // this.employee = fromServer.employee

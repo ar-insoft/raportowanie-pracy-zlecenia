@@ -143,8 +143,11 @@ class RaportowanieForm extends Component {
             })
     }
 
-    handleRaport = () => {
-
+    handleAnuluj = () => {
+        this.wyswietlLicznikIOdswiezStroneZa(30);
+        this.resetujPoleTekstoweSkanowania();
+        this.focusPoleTekstoweSkanowania();
+        this.setState({ raportujZlecenie: new RaportujZlecenie() });
     }
 
     setScan = (value) => {
@@ -228,7 +231,7 @@ class RaportowanieForm extends Component {
                                 <InformacjeZSerwera raportujZlecenie={raportujZlecenie} />
                             </div>
                         </Segment>
-                        <PrzyciskiSterujace parent={this} visible={true} />
+                        <PrzyciskiSterujace parent={this} visible={true} raportujZlecenie={raportujZlecenie} />
                         <AkcjeTestowe parent={this} raportujZlecenie={raportujZlecenie} visible={raportujZlecenie.SerwerDewepolerski} />
                         <Segment>
                             <Table celled striped>
@@ -305,22 +308,27 @@ class RaportowanieForm extends Component {
 }
 
 const PrzyciskiSterujace = (props) => {
-    const { parent, visible } = props
+    const { parent, visible, raportujZlecenie } = props
+    const pracePracownika = raportujZlecenie.praceRozpoczetePrzezPracownika
+    const jestOperacjaDoZakonczenia = pracePracownika && pracePracownika.length === 1
     if (visible) return (
         <Segment >
-            <Button icon onClick={(evt) => { parent.setScan('START'); parent.handleScan() }} type='button'>
+            <Button icon onClick={(evt) => { parent.setScan('START'); parent.handleScan() }} 
+                    disabled={!raportujZlecenie.isOperacjaOdczytana()} type='button'>
                 <Icon name='external' />
                 START
                             </Button>
-            <Button icon onClick={(evt) => { parent.setScan('PRZERWIJ'); parent.handleScan() }} type='button'>
+            <Button icon onClick={(evt) => { parent.setScan('PRZERWIJ'); parent.handleScan() }} 
+                    disabled={!jestOperacjaDoZakonczenia} type='button'>
                 <Icon name='external' />
                 PRZERWIJ
                             </Button>
-            <Button icon onClick={(evt) => { parent.setScan('ZAKONCZ'); parent.handleScan() }} type='button'>
+            <Button icon onClick={(evt) => { parent.setScan('ZAKONCZ'); parent.handleScan() }}  
+                    disabled={!jestOperacjaDoZakonczenia} type='button'>
                 <Icon name='external' />
                 ZAKONCZ
                             </Button>
-            <Button icon onClick={(evt) => { parent.setScan('ANULUJ'); parent.handleScan() }} type='button'>
+            <Button icon onClick={(evt) => { parent.handleAnuluj() }} type='button'>
                 <Icon name='external' />
                 ANULUJ
                             </Button>

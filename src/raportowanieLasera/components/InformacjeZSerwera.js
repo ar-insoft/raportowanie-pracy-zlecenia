@@ -3,19 +3,8 @@ import classNames from 'classnames/bind'
 
 const InformacjeZSerwera = (props) => {
     const { raportujZlecenie } = props
-    const error = raportujZlecenie.serverInfo && raportujZlecenie.serverInfo.error
+    const error = raportujZlecenie.blad
     const ok = raportujZlecenie.serverInfo && raportujZlecenie.serverInfo.ok
-    //console.log('InformacjeZSerwera: ' + (raportujZlecenie.serverInfo && (raportujZlecenie.serverInfo.error || raportujZlecenie.serverInfo.ok)))
-
-    // if (raportujZlecenie.wlasnieOdczytano === 'pracownik') {
-    //     return (
-    //         <div className='server_info odczytano_dane'>
-    //             <div style={{ margin: 'auto', verticalAlign: 'middle', height: 100+'%' }}>
-    //             Odczytano pracownika
-    //             </div>
-    //         </div>
-    //     )        
-    // }
 
     return (
         <div className={classNames(
@@ -24,7 +13,7 @@ const InformacjeZSerwera = (props) => {
                 'niepoprawne_dane': error,
                 'odczytano_dane': ok,
             })}>
-            {raportujZlecenie.serverInfo && (raportujZlecenie.serverInfo.error || raportujZlecenie.serverInfo.ok)}
+            {raportujZlecenie.blad || (raportujZlecenie.zadanieDoWykonania && raportujZlecenie.zadanieDoWykonania.info)}
         </div>
         )
 }

@@ -321,16 +321,16 @@ const PrzyciskiSterujace = (props) => {
             <Button icon onClick={(evt) => { parent.setScan('PRZERWIJ'); parent.handleScan() }} 
                     disabled={!jestOperacjaDoZakonczenia} type='button'>
                 <Icon name='external' />
-                PRZERWIJ
+                <FormattedMessage id="PRZERWIJ" defaultMessage="PRZERWIJ" />
                             </Button>
             <Button icon onClick={(evt) => { parent.setScan('ZAKONCZ'); parent.handleScan() }}  
                     disabled={!jestOperacjaDoZakonczenia} type='button'>
                 <Icon name='external' />
-                ZAKONCZ
+                <FormattedMessage id="ZAKONCZ" defaultMessage="ZAKONCZ" />
                             </Button>
             <Button icon onClick={(evt) => { parent.handleAnuluj() }} type='button'>
                 <Icon name='external' />
-                ANULUJ
+                <FormattedMessage id="ANULUJ" defaultMessage="ANULUJ" />
                             </Button>
         </Segment>
     )

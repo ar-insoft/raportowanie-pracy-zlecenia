@@ -30,6 +30,10 @@ let i18nConfig = {
     "Rozpocznij pracę": "Start work",
     "Przerwij pracę": "Stop work",
     "Anuluj": "Cancel",
+    "ANULUJ": "CANCEL",
+    "PRZERWIJ": "STOP",
+    "ZAKONCZ": "FINISH",
+    "Lista bieżących prac": "List of ongoing work",
   }
 };
 //			Operacja	

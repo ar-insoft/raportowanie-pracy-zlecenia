@@ -70,6 +70,10 @@ class RaportujZlecenie {
         doWyslania.idElement = this.productOrComponentSystemObject.id_system_object
         delete doWyslania.productOrComponentSystemObject
 
+        delete doWyslania.zadanieDoWykonania
+        delete doWyslania.productionOperationSchedule
+        delete doWyslania.operacjeElementuGlownego
+
         const doWyslaniaJson = JSON.stringify(doWyslania)
 
         fetch('/eoffice/production/raportowanie_pracy_zlecenia/raportowanie_pracy_zlecenia_json_endpoint.xml?action=analizuj_skan_kodu', {
@@ -87,10 +91,11 @@ class RaportujZlecenie {
             })
             .then(json => {
                 if (json.is_request_successful === false) {
-                    const error_message = json.error_message
-                    const errorCause = json.cause
-                    this.errorCause = json.cause
-                    return Promise.reject({ error_message, errorCause })
+                    const error = json
+                    const error_message = error.error_message
+                    const errorCause = error.cause
+                    this.errorCause = error.cause
+                    return Promise.reject(error) //{ error_message, errorCause }
                 }
                 const fromServer = json
                 console.log('RaportujZlecenie.wyslijNaSerwer fromServer', fromServer)

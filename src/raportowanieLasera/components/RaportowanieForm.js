@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Table, Container, List, Header, Confirm, Icon, Segment, Item } from 'semantic-ui-react'
+import { Form, Input, Button, Table, Container, Radio, Header, Confirm, Icon, Segment, Item } from 'semantic-ui-react'
 import { toast } from 'react-toastify'
 import classNames from 'classnames/bind'
 import { FormattedMessage } from 'react-intl'
@@ -19,6 +19,7 @@ class RaportowanieForm extends Component {
         this.state = {
             isLoading: false,
             raportujZlecenie: new RaportujZlecenie(),
+            bladTransmisji: '',
             wlasnieOdczytanoPracownika: false,
             odswiezenieStronyZa: 0,
             odswiezenieStronySubscription: null
@@ -39,9 +40,16 @@ class RaportowanieForm extends Component {
         })
     }
 
-    handleChange = (e) => {
+    handleInputChange = (e) => {
         const { name, value } = e.target;
-        //console.log('RaportowanieForm.handleChange (' + name + ', ' + value + ')')
+        //console.log('RaportowanieForm.handleInputChange ', e, e.target)
+        //console.log('RaportowanieForm.handleInputChange (' + name + ', ' + value + ')')
+        this.handleChange(name, value)
+        //this.setState({ raportujZlecenie: this.state.raportujZlecenie.setter({ [name]: value }) });
+    }
+
+    handleChange = (name, value) => {
+        console.log('RaportowanieForm.handleChange ', name, value)
         this.setState({ raportujZlecenie: this.state.raportujZlecenie.setter({ [name]: value }) });
     }
 
@@ -138,7 +146,12 @@ class RaportowanieForm extends Component {
                 this.setState({ raportujZlecenie: Object.assign(this.state.raportujZlecenie, fromServer), isLoading: false });
                 this.wyswietlLicznikIOdswiezStroneZa(30);
             }, error => {
-                toast.error(<span>Błąd: {error}</span>);
+                const { error_message, errorCause } = error
+                if(error_message) {
+                    toast.error(<span>Błąd: {error_message}</span>);
+                } else {
+                    toast.error(<span>Błąd: {error}</span>);
+                }
                 this.setState({ isLoading: false });
             })
     }
@@ -217,7 +230,7 @@ class RaportowanieForm extends Component {
                                             <Item.Description>
                                                 <Input id='form-input-scanInput' name="scanInput" value={scanInput} type='text'
                                                     autoFocus ref={this.scanInputRef}
-                                                    onChange={this.handleChange}
+                                                    onChange={this.handleInputChange}
                                                     onKeyDown={this.handleKeyOnScan}
                                                 />
                                                 <Button icon onClick={(evt) => this.handleScan()} type='button'>
@@ -279,6 +292,7 @@ class RaportowanieForm extends Component {
                                                 'niepoprawne_dane': !operacjaOdczytana,
                                             })}>
                                                 {operacjaOdczytana ? raportujZlecenie.operacjaOpis() : <FormattedMessage id="brak" defaultMessage="brak" />}
+                                            <ListaOperacji raportujZlecenie={raportujZlecenie} onChange={this.handleChange} />
                                         </Table.Cell>
                                     </Table.Row>
                                     <Table.Row key='prace'>
@@ -333,6 +347,33 @@ const PrzyciskiSterujace = (props) => {
                 <FormattedMessage id="ANULUJ" defaultMessage="ANULUJ" />
                             </Button>
         </Segment>
+    )
+    return null
+}
+
+const ListaOperacji = (props) => {
+    const { raportujZlecenie, onChange } = props
+    const { operacjeElementuGlownego, wybrana_operacja_elementu_glownego } = raportujZlecenie
+    
+
+    if (operacjeElementuGlownego) return (
+        <>
+            {
+                operacjeElementuGlownego.map(operacja => {
+                    const identyfikatorOperacji = operacja.sooperation_object_external_index // operacja.id
+                    return(
+                    <Form.Field key={operacja.id}>
+                        <Radio
+                            label={operacja.sooperation_object_index + ' / ' + operacja.sooperation_title}
+                            name='wybrana_operacja_elementu_glownego'
+                            value={identyfikatorOperacji}
+                            checked={wybrana_operacja_elementu_glownego === identyfikatorOperacji}
+                            onChange={(e, { name, value }) => onChange(name, value)}
+                        />
+                    </Form.Field>
+                    )}
+                )}
+        </>
     )
     return null
 }

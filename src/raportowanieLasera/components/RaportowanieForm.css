@@ -39,3 +39,11 @@
     margin-top: 0.3em;
     display: inline-block;
 }
+
+.operacja_radio_checked {
+    font-weight: bold;
+}
+
+/* .operacje_radio_list:nth-of-type(odd) {
+    background-color: #e0e1e2;
+} */

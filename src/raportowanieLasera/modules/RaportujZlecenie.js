@@ -50,6 +50,10 @@ class RaportujZlecenie {
         return this.productionOperationSchedule.id
     }
 
+    isOperacjaDoRozpoczeciaPracy = () => {
+        return this.wybrana_operacja_elementu_glownego > 0
+    }
+
     operacjaOpis = () => {
         return this.isOperacjaOdczytana() 
         ? this.productionOperationSchedule.object_index + ' / ' + this.productionOperationSchedule.title 

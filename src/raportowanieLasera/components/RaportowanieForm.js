@@ -205,7 +205,8 @@ class RaportowanieForm extends Component {
         const pracownikOdczytany = raportujZlecenie.isPracownikOdczytany()
         const zlecenieOdczytane = raportujZlecenie.isZlecenieOdczytane()
         const elementOdczytany = raportujZlecenie.isElementOdczytany()
-        const operacjaOdczytana = raportujZlecenie.isOperacjaOdczytana()
+        //const operacjaOdczytana = raportujZlecenie.isOperacjaOdczytana()
+        const moznaRaportowacNaOperacje = raportujZlecenie.isOperacjaDoRozpoczeciaPracy()
 
 
         //const programOdczytany = raportujLaser.isProgramOdczytany()
@@ -289,9 +290,11 @@ class RaportowanieForm extends Component {
                                     </Table.Cell>
                                         <Table.Cell width={3} className={classNames(
                                             {
-                                                'niepoprawne_dane': !operacjaOdczytana,
+                                                'niepoprawne_dane': !moznaRaportowacNaOperacje,
                                             })}>
-                                                {operacjaOdczytana ? raportujZlecenie.operacjaOpis() : <FormattedMessage id="brak" defaultMessage="brak" />}
+                                            {/* <OperacjaDomylnaElementu raportujZlecenie={raportujZlecenie} 
+                                                operacjaOdczytana={operacjaOdczytana} pokaz={!raportujZlecenie.operacjeElementuGlownego}/>     */}
+                                                
                                             <ListaOperacji raportujZlecenie={raportujZlecenie} onChange={this.handleChange} />
                                         </Table.Cell>
                                     </Table.Row>
@@ -325,10 +328,11 @@ const PrzyciskiSterujace = (props) => {
     const { parent, visible, raportujZlecenie } = props
     const pracePracownika = raportujZlecenie.praceRozpoczetePrzezPracownika
     const jestOperacjaDoZakonczenia = pracePracownika && pracePracownika.length === 1
+    const startEnebled = raportujZlecenie.isOperacjaDoRozpoczeciaPracy() && raportujZlecenie.isPracownikOdczytany()
     if (visible) return (
         <Segment >
             <Button icon onClick={(evt) => { parent.setScan('START'); parent.handleScan() }} 
-                    disabled={!raportujZlecenie.isOperacjaOdczytana()} type='button'>
+                disabled={!startEnebled} type='button'>
                 <Icon name='external' />
                 START
                             </Button>
@@ -351,24 +355,39 @@ const PrzyciskiSterujace = (props) => {
     return null
 }
 
+const OperacjaDomylnaElementu = (props) => {
+    const { raportujZlecenie, operacjaOdczytana, pokaz } = props
+    if(!pokaz) return null
+    return (
+        <>
+        { operacjaOdczytana ? raportujZlecenie.operacjaOpis() : < FormattedMessage id = "brak" defaultMessage = "brak" />}
+        </>
+    )
+}
+
 const ListaOperacji = (props) => {
     const { raportujZlecenie, onChange } = props
     const { operacjeElementuGlownego, wybrana_operacja_elementu_glownego } = raportujZlecenie
-    
+    //const jedynaOperacja = operacjeElementuGlownego && operacjeElementuGlownego.length == 1
 
     if (operacjeElementuGlownego) return (
         <>
             {
                 operacjeElementuGlownego.map(operacja => {
-                    const identyfikatorOperacji = operacja.sooperation_object_external_index // operacja.id
+                    const identyfikatorOperacji = operacja.sooperation_object_index // operacja.id
+                    const radioChecked = wybrana_operacja_elementu_glownego === identyfikatorOperacji
                     return(
                     <Form.Field key={operacja.id}>
                         <Radio
-                            label={operacja.sooperation_object_index + ' / ' + operacja.sooperation_title}
+                                label={'Operation ' + operacja.ppoperation_structure_position + ' - ' + operacja.sooperation_title}
                             name='wybrana_operacja_elementu_glownego'
                             value={identyfikatorOperacji}
-                            checked={wybrana_operacja_elementu_glownego === identyfikatorOperacji}
+                            checked={radioChecked}
                             onChange={(e, { name, value }) => onChange(name, value)}
+                                className={'operacje_radio_list '+classNames(
+                                {
+                                    'operacja_radio_checked': radioChecked,
+                                })}
                         />
                     </Form.Field>
                     )}

@@ -47,3 +47,10 @@
 /* .operacje_radio_list:nth-of-type(odd) {
     background-color: #e0e1e2;
 } */
+
+.timestamp {
+    font-size: 8px;
+    color: rgba(0, 0, 0, .25);
+    vertical-align: top;
+    margin-left: 15px;
+}

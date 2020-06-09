@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Form, Input, Button, Table, Container, Radio, Header, Confirm, Icon, Segment, Item } from 'semantic-ui-react'
 import { toast } from 'react-toastify'
 import classNames from 'classnames/bind'
-import { FormattedMessage } from 'react-intl'
+import preval from 'preval.macro'
 import logo from '../../bar-code.png';
 import './RaportowanieForm.css'
 import RaportujZlecenie from '../modules/RaportujZlecenie'
@@ -11,6 +11,7 @@ import InformacjeZSerwera from './InformacjeZSerwera'
 import { afterSecondsOf, countDownSecondsOnTickOnComplete } from '../modules/Timers'
 import ConfirmButton from './ConfirmButton'
 //import InnerState from '../../tools/InnerState'
+import { Tlumaczenia } from '../../tools/Tlumaczenia'
 
 class RaportowanieForm extends Component {
     constructor(props) {
@@ -87,25 +88,13 @@ class RaportowanieForm extends Component {
                     this.focusPoleTekstoweSkanowania();
                 }
             }, error => {
-                toast.error(<span>Błąd: {error.error_message}</span>);
-                if (error.errorCause) toast.error(<span>Błąd: {error.errorCause}</span>);
+                this.wyswietlKomunikatBledu(error)
                 this.setState({ isLoading: false })
+                this.wyswietlLicznikIOdswiezStroneZa(30);
+                this.resetujPoleTekstoweSkanowania();
+                this.focusPoleTekstoweSkanowania();
             })
     }
-    // handleScan3 = () => {
-    //     this.setState({ isLoading: true })
-    //     DataProvider.wyslijSkanNaSerwer(this.state.raportujLaser, {},
-    //         fromServer => {
-    //             this.setState({ raportujLaser: Object.assign(this.state.raportujLaser, fromServer), isLoading: false })
-    //             if (fromServer.wlasnieOdczytano === 'pracownik') {
-    //                 this.setState({ wlasnieOdczytanoPracownika: true })
-    //                 afterSecondsOf(3).subscribe(x => this.setState({ wlasnieOdczytanoPracownika: false }))
-    //             }
-    //         }, error => {
-    //             toast.error(<span>Błąd: {error}</span>);
-    //             this.setState({ isLoading: false });
-    //         })
-    // }
 
     handleRozpocznijPrace = () => {
         this.rozpocznijLaczenieZSerwerem()
@@ -118,7 +107,7 @@ class RaportowanieForm extends Component {
                 this.setState({ raportujLaser: Object.assign(this.state.raportujLaser, fromServer), isLoading: false });
                 this.wyswietlLicznikIOdswiezStroneZa(30);
             }, error => {
-                toast.error(<span>Błąd: {error}</span>);
+                this.wyswietlKomunikatBledu(error)
                 this.setState({ isLoading: false });
             })
     }
@@ -132,7 +121,7 @@ class RaportowanieForm extends Component {
                 this.setState({ raportujZlecenie: Object.assign(this.state.raportujZlecenie, fromServer), isLoading: false });
                 this.wyswietlLicznikIOdswiezStroneZa(30);
             }, error => {
-                toast.error(<span>Błąd: {error}</span>);
+                this.wyswietlKomunikatBledu(error)
                 this.setState({ isLoading: false });
             })
     }
@@ -146,14 +135,23 @@ class RaportowanieForm extends Component {
                 this.setState({ raportujZlecenie: Object.assign(this.state.raportujZlecenie, fromServer), isLoading: false });
                 this.wyswietlLicznikIOdswiezStroneZa(30);
             }, error => {
-                const { error_message, errorCause } = error
-                if(error_message) {
-                    toast.error(<span>Błąd: {error_message}</span>);
-                } else {
-                    toast.error(<span>Błąd: {error}</span>);
-                }
+                this.wyswietlKomunikatBledu(error)
                 this.setState({ isLoading: false });
             })
+    }
+
+    wyswietlKomunikatBledu = error => {
+        toast.error(<span>Błąd: {this.trescKomunikatuBledu(error)}</span>);
+    }
+
+    trescKomunikatuBledu = error => {
+        if (typeof error === 'undefined') return 'server_error'
+        const { error_message, errorCause } = error
+        const komunikatBledu = error_message || errorCause || ''
+        if (typeof komunikatBledu === 'object') {
+            komunikatBledu = 'server_error'
+        }
+        return komunikatBledu
     }
 
     handleAnuluj = () => {
@@ -197,6 +195,17 @@ class RaportowanieForm extends Component {
         this.scanInputRef.current.focus();
     }
 
+    pad(number) {
+        if (number < 10) {
+            return '0' + number;
+        }
+        return number;
+    }
+
+    formatDate = (date) => {
+        return date.getUTCFullYear() +'-'+ this.pad(date.getUTCMonth() + 1) +'-'+ this.pad(date.getUTCDate())
+    }
+
     render() {
         const {raportujZlecenie}  = this.state
         //const { raportujLaser } = this.state
@@ -214,7 +223,10 @@ class RaportowanieForm extends Component {
         return (
             <Container textAlign='center'>
                 <Form autoComplete="off" loading={this.state.isLoading}>
-                    <Header as='h2'><FormattedMessage id="Raportowanie czasu pracy zlecenia" defaultMessage="Raportowanie czasu pracy zlecenia" /></Header>
+                    <Header as='h2' id={preval`module.exports = new Date().toLocaleString();`}>
+                        <Tlumaczenia id="Raportowanie czasu pracy zlecenia" />
+                        <span className="timestamp">{this.formatDate(new Date())}</span>
+                    </Header>
                     <Segment.Group>
                         <Segment compact>
                             <div style={{ display: 'flex' }}>
@@ -223,7 +235,7 @@ class RaportowanieForm extends Component {
                                         <Item.Image size='tiny' src={logo} />
 
                                         <Item.Content>
-                                            <Item.Header><FormattedMessage id="Zeskanuj.kod" defaultMessage="Zeskanuj kod" />: </Item.Header>
+                                            <Item.Header><Tlumaczenia id="Zeskanuj.kod" />: </Item.Header>
                                             {/* <Item.Meta>
                                         <span className='price'>$1200</span>
                                         <span className='stay'>1 Month</span>
@@ -252,41 +264,41 @@ class RaportowanieForm extends Component {
                                 <Table.Body>
                                     <Table.Row key='pracownik'>
                                         <Table.Cell width={1}>
-                                            <FormattedMessage id="Pracownik" defaultMessage="Pracownik" />
+                                            <Tlumaczenia id="Pracownik" />
                                     </Table.Cell>
                                         <Table.Cell width={3} className={classNames(
                                             {
                                                 'niepoprawne_dane': !pracownikOdczytany,
                                                 'odczytano_dane': this.state.wlasnieOdczytanoPracownika,
                                             })}>
-                                            {pracownikOdczytany ? raportujZlecenie.getEmployeeFulname() : <FormattedMessage id="brak" defaultMessage="brak" />}
+                                            {pracownikOdczytany ? raportujZlecenie.getEmployeeFulname() : <Tlumaczenia id="brak" />}
                                         </Table.Cell>
                                     </Table.Row>
                                     <Table.Row key='zlecenie'>
                                         <Table.Cell width={1}>
-                                            <FormattedMessage id="Zlecenie" defaultMessage="Zlecenie" />
+                                            <Tlumaczenia id="Zlecenie" />
                                     </Table.Cell>
                                         <Table.Cell width={3} className={classNames(
                                             {
                                                 'niepoprawne_dane': !zlecenieOdczytane,
                                             })}>
-                                                {zlecenieOdczytane ? raportujZlecenie.zlecenieOpis() : <FormattedMessage id="brak" defaultMessage="brak" />}
+                                                {zlecenieOdczytane ? raportujZlecenie.zlecenieOpis() : <Tlumaczenia id="brak" />}
                                         </Table.Cell>
                                     </Table.Row>
                                     <Table.Row key='element'>
                                         <Table.Cell width={1}>
-                                            <FormattedMessage id="Element" defaultMessage="Element" />
+                                            <Tlumaczenia id="Element" />
                                     </Table.Cell>
                                         <Table.Cell width={3} className={classNames(
                                             {
                                                 'niepoprawne_dane': !elementOdczytany,
                                             })}>
-                                                {elementOdczytany ? raportujZlecenie.elementOpis() : <FormattedMessage id="brak" defaultMessage="brak" />}
+                                                {elementOdczytany ? raportujZlecenie.elementOpis() : <Tlumaczenia id="brak" />}
                                         </Table.Cell>
                                     </Table.Row>
                                     <Table.Row key='operacja'>
                                         <Table.Cell width={1}>
-                                            <FormattedMessage id="Operacja technologiczna" defaultMessage="Operacja technologiczna" />
+                                            <Tlumaczenia id="Operacja technologiczna" />
                                     </Table.Cell>
                                         <Table.Cell width={3} className={classNames(
                                             {
@@ -300,7 +312,7 @@ class RaportowanieForm extends Component {
                                     </Table.Row>
                                     <Table.Row key='prace'>
                                         <Table.Cell>
-                                            <FormattedMessage id="Trwające prace" defaultMessage="Trwające prace" />
+                                            <Tlumaczenia id="Trwające prace" />
                                     </Table.Cell>
                                         <Table.Cell>
                                             {pracownikOdczytany
@@ -314,7 +326,7 @@ class RaportowanieForm extends Component {
                                 </Table.Body>
                             </Table>
                             <a href="/eoffice/production/edm_report_production_task_time.xml?action=list&refreshTree=false&raportowanie_produkcji=true">
-                                <FormattedMessage id="Lista bieżących prac" defaultMessage="Lista bieżących prac" />
+                                <Tlumaczenia id="Lista bieżących prac" />
                             </a>
                         </Segment>
                     </Segment.Group>
@@ -339,16 +351,16 @@ const PrzyciskiSterujace = (props) => {
             <Button icon onClick={(evt) => { parent.setScan('PRZERWIJ'); parent.handleScan() }} 
                     disabled={!jestOperacjaDoZakonczenia} type='button'>
                 <Icon name='external' />
-                <FormattedMessage id="PRZERWIJ" defaultMessage="PRZERWIJ" />
+                <Tlumaczenia id="PRZERWIJ" />
                             </Button>
             <Button icon onClick={(evt) => { parent.setScan('ZAKONCZ'); parent.handleScan() }}  
                     disabled={!jestOperacjaDoZakonczenia} type='button'>
                 <Icon name='external' />
-                <FormattedMessage id="ZAKONCZ" defaultMessage="ZAKONCZ" />
+                <Tlumaczenia id="ZAKONCZ" />
                             </Button>
             <Button icon onClick={(evt) => { parent.handleAnuluj() }} type='button'>
                 <Icon name='external' />
-                <FormattedMessage id="ANULUJ" defaultMessage="ANULUJ" />
+                <Tlumaczenia id="ANULUJ" />
                             </Button>
         </Segment>
     )
@@ -360,7 +372,7 @@ const OperacjaDomylnaElementu = (props) => {
     if(!pokaz) return null
     return (
         <>
-        { operacjaOdczytana ? raportujZlecenie.operacjaOpis() : < FormattedMessage id = "brak" defaultMessage = "brak" />}
+        { operacjaOdczytana ? raportujZlecenie.operacjaOpis() : < Tlumaczenia id = "brak" />}
         </>
     )
 }
@@ -376,6 +388,7 @@ const ListaOperacji = (props) => {
                 operacjeElementuGlownego.map(operacja => {
                     const identyfikatorOperacji = operacja.sooperation_object_index // operacja.id
                     const radioChecked = wybrana_operacja_elementu_glownego === identyfikatorOperacji
+                    const zakonczona = operacja.zakonczona === 't'
                     return(
                     <Form.Field key={operacja.id}>
                         <Radio
@@ -388,7 +401,8 @@ const ListaOperacji = (props) => {
                                 {
                                     'operacja_radio_checked': radioChecked,
                                 })}
-                        />
+                            disabled = { zakonczona}
+                         />
                     </Form.Field>
                     )}
                 )}
@@ -450,13 +464,13 @@ const TrwajacePrace = (props) => {
             <Table.Header>
                 <Table.Row>
                     <Table.Cell>
-                    <FormattedMessage id="Operacja technologiczna" defaultMessage="Operacja technologiczna" />
+                    <Tlumaczenia id="Operacja technologiczna" />
                 </Table.Cell>
                     <Table.Cell>
-                        <FormattedMessage id="Rozpoczęcie" defaultMessage="Rozpoczęcie" />
+                        <Tlumaczenia id="Rozpoczęcie" />
                 </Table.Cell>
                     <Table.Cell>
-                        <FormattedMessage id="Akcje" defaultMessage="Akcje" />
+                        <Tlumaczenia id="Akcje" />
                 </Table.Cell>
                 </Table.Row>
             </Table.Header>
@@ -465,20 +479,20 @@ const TrwajacePrace = (props) => {
                     <Table.Row key={praca.id}>
                         <Table.Cell>
                             {praca.operationSystemObject.title}
-                            [<FormattedMessage id="Zlecenie" defaultMessage="Zlecenie" />: 
+                            [<Tlumaczenia id="Zlecenie" />: 
                             {praca.orderProductionSystemObject.title}] 
-                            [<FormattedMessage id="Element" defaultMessage="Element" />: {praca.productProductOrComponentSystemObject.title}]
+                            [<Tlumaczenia id="Element" />: {praca.productProductOrComponentSystemObject.title}]
                         </Table.Cell>
                         <Table.Cell>
                             {praca.start_datetime}
                         </Table.Cell>
                         <Table.Cell>
                             <ConfirmButton onClick={(evt) => handlePrzerwijPrace(praca.prodOperSchedule.id)}
-                                content={<FormattedMessage id="Przerwij pracę" defaultMessage="Przerwij pracę" />}
+                                content={<Tlumaczenia id="Przerwij pracę" />}
                                 useConfirm={praca.czyProgramNiedawnoRozpoczety == true}
                                 confirmContent="Program został niedawno rozpoczęty. Czy na pewno chcesz go przerwać?"
-                                cancelButton='Anuluj' //{<FormattedMessage id="Anuluj" defaultMessage="Anuluj" />}
-                                confirmButton='Przerwij pracę' //{<FormattedMessage id="Przerwij pracę" defaultMessage="Przerwij pracę" />}
+                                cancelButton='Anuluj' //{<Tlumaczenia id="Anuluj" />}
+                                confirmButton='Przerwij pracę' //{<Tlumaczenia id="Przerwij pracę" />}
                             />
                             <Button type='button' icon onClick={(evt) => handleZakonczPrace(praca.prodOperSchedule.id)}
                                             disabled={praca.trwajaInnePrace}

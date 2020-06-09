@@ -6,37 +6,37 @@ import 'react-toastify/dist/ReactToastify.css'
 import './App.css';
 import RaportowanieForm from './raportowanieLasera/components/RaportowanieForm'
 import ErrorBoundary from './tools/ErrorBoundary'
+import { messagesOf } from './tools/i18nConfig'
 
-let elLocaleData = require('react-intl/locale-data/en')
-let i18nConfig = {
-  locale: 'en',
-  messages: {
-    "Zeskanuj.kod": "Scan the code",
-    "Raportowanie czasu pracy zlecenia": "Working time reporting - orders",
-    "Pracownik": "Employee",
-    "Zlecenie": "Order",
-    "Element": "Part",
-    "Operacja technologiczna": "Techno operation",
-    "Trwające prace": "Ongoing work",
-    "Detale programu": "Parts of the program",
-    "brak": "no data",
-    "Rozpoczęcie": "Start time",
-    "Akcje": "Actions",
-    "Lista prac lasera": "List of laser works",
-    "Nr czesci": "Part no",
-    "Komponent": "Part",
-    "Operacja": "Operation",
-    "Współczynnik czasu": "Time factor",
-    "Rozpocznij pracę": "Start work",
-    "Przerwij pracę": "Stop work",
-    "Anuluj": "Cancel",
-    "ANULUJ": "CANCEL",
-    "PRZERWIJ": "STOP",
-    "ZAKONCZ": "FINISH",
-    "Lista bieżących prac": "List of ongoing work",
-  }
-};
-//			Operacja	
+// let elLocaleData = require('react-intl/locale-data/en')
+// let i18nConfig = {
+//   locale: 'en',
+//   messages: {
+//     "Zeskanuj.kod": "Scan the code",
+//     "Raportowanie czasu pracy zlecenia": "Working time reporting - orders",
+//     "Pracownik": "Employee",
+//     "Zlecenie": "Order",
+//     "Element": "Part",
+//     "Operacja technologiczna": "Techno operation",
+//     "Trwające prace": "Ongoing work",
+//     "Detale programu": "Parts of the program",
+//     "brak": "no data",
+//     "Rozpoczęcie": "Start time",
+//     "Akcje": "Actions",
+//     "Lista prac lasera": "List of laser works",
+//     "Nr czesci": "Part no",
+//     "Komponent": "Part",
+//     "Operacja": "Operation",
+//     "Współczynnik czasu": "Time factor",
+//     "Rozpocznij pracę": "Start work",
+//     "Przerwij pracę": "Stop work",
+//     "Anuluj": "Cancel",
+//     "ANULUJ": "CANCEL",
+//     "PRZERWIJ": "STOP",
+//     "ZAKONCZ": "FINISH",
+//     "Lista bieżących prac": "List of ongoing work",
+//   }
+// };
 
 class App extends Component {
   render() {
@@ -45,7 +45,7 @@ class App extends Component {
 
     return (
       <ErrorBoundary>
-        <IntlProvider locale={lang} messages={i18nConfig.messages}>
+        <IntlProvider locale={lang} messages={messagesOf(lang)}>
           <div className="App">
             <RaportowanieForm />
             <ToastContainer

@@ -224,7 +224,7 @@ class RaportowanieForm extends Component {
             <Container textAlign='center'>
                 <Form autoComplete="off" loading={this.state.isLoading}>
                     <Header as='h2' id={preval`module.exports = new Date().toLocaleString();`}>
-                        <Tlumaczenia id="Raportowanie czasu pracy zlecenia" />
+                        <Tlumaczenia id="Raportowanie czasu pracy – SAP" />
                         <span className="timestamp">{this.formatDate(new Date())}</span>
                     </Header>
                     <Segment.Group>
@@ -538,7 +538,7 @@ const TrwajacePrace = (props) => {
 const OdswiezenieStronyZa = props => (
     <React.Fragment>
         <span className='odswiezStroneZa'> </span>
-        {props.sekund > 0 && <span>Odświeżenie strony za {props.sekund}</span>}
+        {props.sekund > 0 && <span><Tlumaczenia id="Odświeżenie strony za" /> {props.sekund}</span>}
     </React.Fragment>
 );
 

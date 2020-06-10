@@ -1,6 +1,7 @@
 
 export const messages = 
     [
+        { id: "Raportowanie czasu pracy – SAP", en: "Working time reporting – SAP"},
         { id: "Zeskanuj.kod", en: "Scan the code" },
         { id: "Raportowanie czasu pracy zlecenia", en: "Working time reporting - orders", },
         { id: "Raportowanie produkcji w oparciu o confirmation number", en: "Working time reporting - orders [confirmation number]", },
@@ -25,6 +26,7 @@ export const messages =
         { id: "PRZERWIJ", en: "STOP", },
         { id: "ZAKONCZ", en: "FINISH", },
         { id: "Lista bieżących prac", en: "List of ongoing work", },
+        { id: "Odświeżenie strony za", en: "Page refresh in", },
     ]
 
 export const messagesOf = (lang) => {
@@ -42,6 +44,7 @@ export const messagesOf0 = (lang) => {
 }
 
 const messages0 = {
+    "Raportowanie czasu pracy – SAP": "Working time reporting – SAP",
     "Zeskanuj.kod": "Scan the code",
     "Raportowanie produkcji w oparciu o confirmation number": "Working time reporting - orders",
     "Pracownik": "Employee",

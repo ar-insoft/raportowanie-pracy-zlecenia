@@ -216,16 +216,16 @@ class RaportowanieForm extends Component {
         const elementOdczytany = raportujZlecenie.isElementOdczytany()
         //const operacjaOdczytana = raportujZlecenie.isOperacjaOdczytana()
         const moznaRaportowacNaOperacje = raportujZlecenie.isOperacjaDoRozpoczeciaPracy()
-
+        const buildDate = preval`module.exports = new Date();`
 
         //const programOdczytany = raportujLaser.isProgramOdczytany()
         //console.log('programOdczytany ' + programOdczytany)
         return (
             <Container textAlign='center'>
                 <Form autoComplete="off" loading={this.state.isLoading}>
-                    <Header as='h2' id={preval`module.exports = new Date().toLocaleString();`}>
+                    <Header as='h2' id={preval`module.exports = new Date();`}>
                         <Tlumaczenia id="Raportowanie czasu pracy – SAP" />
-                        <span className="timestamp">{this.formatDate(new Date())}</span>
+                        <span className="timestamp">{buildDate.substr(0, 10)}</span>
                     </Header>
                     <Segment.Group>
                         <Segment compact>
@@ -325,7 +325,7 @@ class RaportowanieForm extends Component {
                                     </Table.Row>
                                 </Table.Body>
                             </Table>
-                            <a href="/eoffice/production/edm_report_production_task_time.xml?action=list&refreshTree=false&raportowanie_produkcji=true">
+                            <a href="/eoffice/production/edm_report_production_task_time.xml?action=list&refreshTree=false&raportowanie_produkcji=react_raportowanie_pracy_zlecenia">
                                 <Tlumaczenia id="Lista bieżących prac" />
                             </a>
                         </Segment>
@@ -353,11 +353,11 @@ const PrzyciskiSterujace = (props) => {
                 <Icon name='external' />
                 <Tlumaczenia id="PRZERWIJ" />
                             </Button>
-            <Button icon onClick={(evt) => { parent.setScan('ZAKONCZ'); parent.handleScan() }}  
+            {/* <Button icon onClick={(evt) => { parent.setScan('ZAKONCZ'); parent.handleScan() }}  
                     disabled={!jestOperacjaDoZakonczenia} type='button'>
                 <Icon name='external' />
                 <Tlumaczenia id="ZAKONCZ" />
-                            </Button>
+                            </Button> */}
             <Button icon onClick={(evt) => { parent.handleAnuluj() }} type='button'>
                 <Icon name='external' />
                 <Tlumaczenia id="ANULUJ" />
@@ -494,12 +494,12 @@ const TrwajacePrace = (props) => {
                                 cancelButton='Anuluj' //{<Tlumaczenia id="Anuluj" />}
                                 confirmButton='Przerwij pracę' //{<Tlumaczenia id="Przerwij pracę" />}
                             />
-                            <Button type='button' icon onClick={(evt) => handleZakonczPrace(praca.prodOperSchedule.id)}
+                            {/* <Button type='button' icon onClick={(evt) => handleZakonczPrace(praca.prodOperSchedule.id)}
                                             disabled={praca.trwajaInnePrace}
                                         >
                                             <Icon name='send' />
                                             Zakończ pracę
-                                        </Button>
+                                        </Button> */}
                             {/* <ConfirmButton onClick={(evt) => handleZakonczPrace(praca.id)}
                                 disabled={praca.trwajaInnePrace} content="Zakończ pracę"
                                 useConfirm={true}

@@ -34,6 +34,10 @@ class RaportujZlecenie {
         return typeof this.scanInput === 'string' && this.scanInput.toUpperCase() === 'PRZERWIJ'
     }
 
+    isScanCodeZakoncz = () => {
+        return typeof this.scanInput === 'string' && this.scanInput.toUpperCase() === 'ZAKONCZ'
+    }
+
     isActionStartEnabled = () => {
         return this.isOperacjaDoRozpoczeciaPracy() && this.isPracownikOdczytany()
     }

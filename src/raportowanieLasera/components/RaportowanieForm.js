@@ -73,9 +73,18 @@ class RaportowanieForm extends Component {
             return
         }
         if (raportujZlecenie.isScanCodeStart() && !raportujZlecenie.isActionStartEnabled()) {
+            this.resetujPoleTekstoweSkanowania();
+            this.focusPoleTekstoweSkanowania();
             return
         }
         if (raportujZlecenie.isScanCodePrzerwij() && !raportujZlecenie.isActionPrzerwijEnabled()) {
+            this.resetujPoleTekstoweSkanowania();
+            this.focusPoleTekstoweSkanowania();
+            return
+        }
+        if (raportujZlecenie.isScanCodeZakoncz()) {
+            this.resetujPoleTekstoweSkanowania();
+            this.focusPoleTekstoweSkanowania();
             return
         }
         this.rozpocznijLaczenieZSerwerem()

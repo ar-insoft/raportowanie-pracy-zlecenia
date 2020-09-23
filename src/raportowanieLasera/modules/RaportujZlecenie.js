@@ -11,7 +11,7 @@ class RaportujZlecenie {
 
     setter = (changes) => {
         Object.keys(changes).forEach(key => {
-            console.log('RaportujZlecenie.setter(' + key + ', ' + changes[key] + ')')
+            //console.log('RaportujZlecenie.setter(' + key + ', ' + changes[key] + ')')
 
             this[key] = changes[key]
         })
@@ -20,6 +20,28 @@ class RaportujZlecenie {
 
     getEmployeeFulname = () => {
         return this.employee.surname ? this.employee.surname + ' ' + this.employee.name : ''
+    }
+
+    isScanCodeAnuluj = () => {
+        return typeof this.scanInput === 'string' && this.scanInput.toUpperCase() === 'ANULUJ'
+    }
+
+    isScanCodeStart = () => {
+        return typeof this.scanInput === 'string' && this.scanInput.toUpperCase() === 'START'
+    }
+
+    isScanCodePrzerwij = () => {
+        return typeof this.scanInput === 'string' && this.scanInput.toUpperCase() === 'PRZERWIJ'
+    }
+
+    isActionStartEnabled = () => {
+        return this.isOperacjaDoRozpoczeciaPracy() && this.isPracownikOdczytany()
+    }
+
+    isActionPrzerwijEnabled = () => {
+        const pracePracownika = this.praceRozpoczetePrzezPracownika
+        const jestPojedynczaOperacjaDoZakonczenia = pracePracownika && pracePracownika.length === 1
+        return jestPojedynczaOperacjaDoZakonczenia
     }
 
     isPracownikOdczytany = () => {

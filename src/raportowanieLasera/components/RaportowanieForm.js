@@ -50,7 +50,7 @@ class RaportowanieForm extends Component {
     }
 
     handleChange = (name, value) => {
-        console.log('RaportowanieForm.handleChange ', name, value)
+        //console.log('RaportowanieForm.handleChange ', name, value)
         this.setState({ raportujZlecenie: this.state.raportujZlecenie.setter({ [name]: value }) });
     }
 
@@ -67,6 +67,17 @@ class RaportowanieForm extends Component {
     }
 
     handleScan = () => {
+        const raportujZlecenie = this.state.raportujZlecenie
+        if (raportujZlecenie.isScanCodeAnuluj()) {
+            this.handleAnuluj()
+            return
+        }
+        if (raportujZlecenie.isScanCodeStart() && !raportujZlecenie.isActionStartEnabled()) {
+            return
+        }
+        if (raportujZlecenie.isScanCodePrzerwij() && !raportujZlecenie.isActionPrzerwijEnabled()) {
+            return
+        }
         this.rozpocznijLaczenieZSerwerem()
         this.state.raportujZlecenie.wyslijNaSerwer({},
             fromServer => {
@@ -338,23 +349,21 @@ class RaportowanieForm extends Component {
 
 const PrzyciskiSterujace = (props) => {
     const { parent, visible, raportujZlecenie } = props
-    const pracePracownika = raportujZlecenie.praceRozpoczetePrzezPracownika
-    const jestOperacjaDoZakonczenia = pracePracownika && pracePracownika.length === 1
-    const startEnebled = raportujZlecenie.isOperacjaDoRozpoczeciaPracy() && raportujZlecenie.isPracownikOdczytany()
+    
     if (visible) return (
         <Segment >
             <Button icon onClick={(evt) => { parent.setScan('START'); parent.handleScan() }} 
-                disabled={!startEnebled} type='button'>
+                disabled={!raportujZlecenie.isActionStartEnabled()} type='button'>
                 <Icon name='external' />
                 START
                             </Button>
             <Button icon onClick={(evt) => { parent.setScan('PRZERWIJ'); parent.handleScan() }} 
-                    disabled={!jestOperacjaDoZakonczenia} type='button'>
+                disabled={!raportujZlecenie.isActionPrzerwijEnabled()} type='button'>
                 <Icon name='external' />
                 <Tlumaczenia id="PRZERWIJ" />
                             </Button>
             {/* <Button icon onClick={(evt) => { parent.setScan('ZAKONCZ'); parent.handleScan() }}  
-                    disabled={!jestOperacjaDoZakonczenia} type='button'>
+                    disabled={!raportujZlecenie.isActionPrzerwijEnabled()} type='button'>
                 <Icon name='external' />
                 <Tlumaczenia id="ZAKONCZ" />
                             </Button> */}

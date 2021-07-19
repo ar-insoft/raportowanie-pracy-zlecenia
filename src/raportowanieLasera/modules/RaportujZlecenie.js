@@ -134,11 +134,12 @@ class RaportujZlecenie {
                 //fromServer.idEmployee = fromServer.employee ? fromServer.employee.id : ''
                 this.pracePracownika = fromServer.pracePracownika
 
-                // this.employee = fromServer.employee
-                // this.idEmployee = fromServer.employee ? fromServer.employee.id : ''
-                // this.idProgramu = fromServer.kartaProgramu ? fromServer.kartaProgramu.idProgramu : ''
-                // this.kartaProgramu = fromServer.kartaProgramu
-                // this.serverInfo = fromServer.serverInfo
+                if (fromServer.SerwerDewepolerski === 'true') {
+                    if (fromServer.employee) {
+                        console.log('dev employee')
+                        localStorage.setItem('employee', fromServer.employee);
+                    }
+                }
 
                 promiseHandler(fromServer)
             })

@@ -2,26 +2,27 @@
   "name": "raportowanie_pracy_zlecenia",
   "homepage": "http://proedims:8080/eoffice/react/raportowanie_pracy_zlecenia",
   "proxy": "http://proedims:8080",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
     "preval.macro": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-intl": "^2.9.0",
     "react-scripts": "3.4.1",
     "react-toastify": "^5.5.0",
     "rxjs": "^6.5.5",
     "semantic-ui-css": "2.4.1",
-    "semantic-ui-react": "^0.88.2",
-    "react-intl": "^2.9.0"
+    "semantic-ui-react": "^0.88.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "send-build-to-proedims": "send-build-to-proedims",
-    "prebuild": "standard-version"
+    "prebuild": "standard-version",
+    "cypress-open": "yarn run cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -33,6 +34,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "cypress": "^8.4.0",
     "standard-version": "^9.1.0"
-  } 
+  }
 }

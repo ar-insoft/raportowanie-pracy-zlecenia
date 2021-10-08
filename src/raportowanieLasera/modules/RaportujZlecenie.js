@@ -88,6 +88,8 @@ class RaportujZlecenie {
 
     wyslijNaSerwer = (additionalFields, promiseHandler, errorHandler) => {
         const doWyslania = Object.assign({ ...this }, { ...additionalFields })
+        delete doWyslania.ClassName
+        delete doWyslania.blad
         doWyslania.idEmployee = this.employee.id
         delete doWyslania.employee
 
@@ -95,7 +97,7 @@ class RaportujZlecenie {
         delete doWyslania.praceRozpoczetePrzezPracownika
         delete doWyslania.serverInfo
 
-        doWyslania.confirmation_number = additionalFields.confirmation_number || this.productionOperationSchedule.confirmation_number
+        //doWyslania.confirmation_number = additionalFields.confirmation_number || this.productionOperationSchedule.confirmation_number
         //console.log('doWyslania.confirmation_number', doWyslania.confirmation_number)
         doWyslania.idZlecenie = this.orderProductionSystemObject.id_system_object
         delete doWyslania.orderProductionSystemObject
